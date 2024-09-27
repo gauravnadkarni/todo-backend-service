@@ -1,5 +1,4 @@
 import { Inject, Module } from '@nestjs/common';
-import { databaseProviders } from './database.providers';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
