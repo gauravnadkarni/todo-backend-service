@@ -4,9 +4,11 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { Todo as TodoEntity } from './entities/todo.entity';
@@ -23,11 +25,13 @@ export class TodoController {
   }
 
   @Post()
+  @UsePipes(new ValidationPipe({transform:true}))
   async create(@Body() createTodo: CreateTodoDto): Promise<TodoEntity> {
     return this.todoService.addTodo(createTodo);
   }
 
-  @Put(':id')
+  @Patch(':id')
+  @UsePipes(new ValidationPipe({transform:true}))
   async update(
     @Param('id') id: string,
     @Body() updateTodoDto: UpdateTodoDto,
@@ -37,8 +41,8 @@ export class TodoController {
 
   @Get()
   async list(
-    @Query('start') start: number,
-    @Query('limit') limit: number,
+    @Query('start') start: number= 1,
+    @Query('limit') limit: number= 10,
   ): Promise<Array<TodoEntity>> {
     return this.todoService.listAllTodosPaginated(start,limit);
   }

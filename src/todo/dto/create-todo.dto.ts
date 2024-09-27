@@ -4,8 +4,8 @@ import { Todo as TodoEntity } from '../entities/todo.entity';
 export class CreateTodoDto implements IDto<CreateTodoDto, TodoEntity> {
   id: string | undefined;
   title: string;
-  dueDate: Date;
-  isCompleted: boolean | undefined;
+  dueDate: Date | undefined;
+  isDone: boolean;
  
   toEntity(createTodoDto?: CreateTodoDto): TodoEntity {
     const dto = createTodoDto || this;
@@ -13,7 +13,7 @@ export class CreateTodoDto implements IDto<CreateTodoDto, TodoEntity> {
     todoEntity.id=  dto.id;
     todoEntity.title = dto.title ;
     todoEntity.dueDate= dto.dueDate;
-    todoEntity.isCompleted= dto.isCompleted;
+    todoEntity.isDone= dto.isDone;
     return todoEntity;
   }
 }

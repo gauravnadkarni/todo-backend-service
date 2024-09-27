@@ -10,8 +10,8 @@ export class Todo {
   @Column()
   title: string;
 
-  @Column()
-  isCompleted: boolean;
+  @Column({default: false})
+  isDone: boolean;
 
   @Column({ type: 'timestamp', nullable:true})
   dueDate: Date;

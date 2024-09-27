@@ -12,8 +12,8 @@ export class TodoService {
     private todoRepository: Repository<TodoEntity>,
   ) {}
 
-  async addTodo(createTododDto: CreateTodoDto) {
-    const todoEntity = createTododDto.toEntity();
+  async addTodo(createTodoDto: CreateTodoDto) {
+    const todoEntity = createTodoDto.toEntity();
     return this.todoRepository.save(todoEntity);
   }
 
@@ -26,7 +26,7 @@ export class TodoService {
   }
 
   async updateTodo(id: string, updateTodoDto: UpdateTodoDto): Promise<TodoEntity> {
-    return await this.todoRepository.manager.transaction(async (transactionalEntityManager) => {
+    return this.todoRepository.manager.transaction(async (transactionalEntityManager) => {
         const todoEntity:TodoEntity = await transactionalEntityManager.findOne(TodoEntity,{where:{id}})
         if(!todoEntity) {
           return;
@@ -35,13 +35,13 @@ export class TodoService {
         await transactionalEntityManager.update(TodoEntity,{id},{
           title: updateTodoDto.title,
           dueDate: updateTodoDto.dueDate,
-          isCompleted:updateTodoDto.isCompleted,
+          isDone:updateTodoDto.isDone,
         });
-        return await this.todoRepository.findOneBy({ id });
+        return transactionalEntityManager.findOne(TodoEntity, { where: { id } });;
     });
   }
 
-  async listAllTodosPaginated(start: number = 1, pageSize: number = 10): Promise<Array<TodoEntity>> {
+  async listAllTodosPaginated(start: number, pageSize: number): Promise<Array<TodoEntity>> {
     const todoEntities: Array<TodoEntity> = await this.todoRepository.find({
         skip: (start - 1) * pageSize,
         take: pageSize,
